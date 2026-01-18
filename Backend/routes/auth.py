@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime, timedelta
 import bcrypt
-from Backend.models.user import register_user_schema,change_password_schema,update_user_schema ,login_user_schema , validate_json
+from models.user import register_user_schema,change_password_schema,update_user_schema ,login_user_schema , validate_json
 
 users_bp = Blueprint("users", __name__)
 users_collection = None  
