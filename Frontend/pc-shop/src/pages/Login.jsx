@@ -36,10 +36,10 @@ function Login() {
         return;
       }
 
-      // ✅ zapis JWT
+      //  zapis JWT
       localStorage.setItem("token", data.access_token);
 
-      // ✅ przekierowanie
+      //  przekierowanie
       navigate("/");
     } catch (err) {
       setError("Brak połączenia z serwerem");

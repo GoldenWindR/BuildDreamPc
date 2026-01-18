@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const [login, setLogin] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -10,30 +13,53 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     // Walidacja
-    if (!email || !password || !confirmPassword) {
+    if (!login || !firstName || !lastName || !email || !password || !confirmPassword) {
       setError("Wszystkie pola są wymagane");
-      setSuccess("");
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Hasła nie są takie same");
-      setSuccess("");
       return;
     }
 
-    // FAKE rejestracja
-    setError("");
-    setSuccess("Rejestracja zakończona sukcesem!");
+    try {
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          login: login,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password
+        })
+      });
 
-    // Symulacja przekierowania na login
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Błąd rejestracji");
+        return;
+      }
+
+      setSuccess("Rejestracja zakończona sukcesem!");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
+    } catch (err) {
+      setError("Brak połączenia z serwerem");
+    }
   };
 
   return (
@@ -48,27 +74,24 @@ function Register() {
 
             <form onSubmit={handleRegister}>
               <input
-                type="text"
                 className="form-control mb-3"
                 placeholder="Login"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
               />
 
               <input
-                type="text"
                 className="form-control mb-3"
-                placeholder="Imie"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Imię"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
 
               <input
-                type="text"
                 className="form-control mb-3"
                 placeholder="Nazwisko"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
 
               <input
@@ -101,7 +124,7 @@ function Register() {
             </form>
 
             <p className="text-center mt-3 mb-0">
-              Masz już konto? <br />
+              Masz już konto?{" "}
               <span
                 className="text-primary"
                 style={{ cursor: "pointer" }}
@@ -110,6 +133,7 @@ function Register() {
                 Zaloguj się
               </span>
             </p>
+
           </div>
         </div>
       </div>
