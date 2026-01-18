@@ -5,6 +5,7 @@ import Shop from "./pages/Shop";
 import Configurator from "./pages/Configurator";
 import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/configurator" element={<Configurator />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/Profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );
