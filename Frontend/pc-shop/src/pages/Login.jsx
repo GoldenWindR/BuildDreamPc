@@ -60,6 +60,17 @@ function Login() {
             <p className="text-center mt-3 mb-0">
               Login testowy:<br />
               <strong>admin@pcshop.pl / admin</strong>
+
+            </p>
+            <p className="text-center mt-3 mb-0">
+              jeszcze nie masz kont?
+              <span
+                className="text-primary"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/register")}
+              >
+                rejestruj sie 
+              </span>
             </p>
           </div>
         </div>
