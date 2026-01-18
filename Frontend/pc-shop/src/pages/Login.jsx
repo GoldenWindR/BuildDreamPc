@@ -18,15 +18,15 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch("http://localhost:5000/users/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           login: login,
-          password: password
-        })
+          password: password,
+        }),
       });
 
       const data = await response.json();
@@ -72,13 +72,12 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              <button className="btn btn-primary w-100">
-                Zaloguj się
-              </button>
+              <button className="btn btn-primary w-100">Zaloguj się</button>
             </form>
 
             <p className="text-center mt-3 mb-0">
-              Login testowy:<br />
+              Login testowy:
+              <br />
               <strong>admin / admin</strong>
             </p>
 
@@ -92,7 +91,6 @@ function Login() {
                 Zarejestruj się
               </span>
             </p>
-
           </div>
         </div>
       </div>
