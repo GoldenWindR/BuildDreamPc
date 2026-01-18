@@ -19,7 +19,14 @@ function Register() {
     setSuccess("");
 
     // Walidacja
-    if (!login || !firstName || !lastName || !email || !password || !confirmPassword) {
+    if (
+      !login ||
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
       setError("Wszystkie pola są wymagane");
       return;
     }
@@ -30,18 +37,18 @@ function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/register", {
+      const response = await fetch("http://localhost:5000/users/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           login: login,
           first_name: firstName,
           last_name: lastName,
           email: email,
-          password: password
-        })
+          password: password,
+        }),
       });
 
       const data = await response.json();
@@ -56,7 +63,6 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-
     } catch (err) {
       setError("Brak połączenia z serwerem");
     }
@@ -118,9 +124,7 @@ function Register() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
 
-              <button className="btn btn-primary w-100">
-                Zarejestruj się
-              </button>
+              <button className="btn btn-primary w-100">Zarejestruj się</button>
             </form>
 
             <p className="text-center mt-3 mb-0">
@@ -133,7 +137,6 @@ function Register() {
                 Zaloguj się
               </span>
             </p>
-
           </div>
         </div>
       </div>
