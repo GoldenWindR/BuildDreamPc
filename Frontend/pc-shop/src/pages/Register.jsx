@@ -48,6 +48,30 @@ function Register() {
 
             <form onSubmit={handleRegister}>
               <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Login"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Imie"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Nazwisko"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
                 type="email"
                 className="form-control mb-3"
                 placeholder="Email"

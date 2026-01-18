@@ -2,27 +2,47 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Walidacja
-    if (!email || !password) {
+    if (!login || !password) {
       setError("Wszystkie pola są wymagane");
       return;
     }
 
-    // FAKE login (na razie)
-    if (email === "admin@pcshop.pl" && password === "admin") {
-      setError("");
+    try {
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          login: login,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Błąd logowania");
+        return;
+      }
+
+      // ✅ zapis JWT
+      localStorage.setItem("token", data.access_token);
+
+      // ✅ przekierowanie
       navigate("/");
-    } else {
-      setError("Nieprawidłowy email lub hasło");
+    } catch (err) {
+      setError("Brak połączenia z serwerem");
     }
   };
 
@@ -37,11 +57,11 @@ function Login() {
 
             <form onSubmit={handleLogin}>
               <input
-                type="email"
+                type="text"
                 className="form-control mb-3"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Login"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
               />
 
               <input
@@ -59,19 +79,20 @@ function Login() {
 
             <p className="text-center mt-3 mb-0">
               Login testowy:<br />
-              <strong>admin@pcshop.pl / admin</strong>
-
+              <strong>admin / admin</strong>
             </p>
+
             <p className="text-center mt-3 mb-0">
-              jeszcze nie masz kont?
+              Jeszcze nie masz konta?{" "}
               <span
                 className="text-primary"
                 style={{ cursor: "pointer" }}
                 onClick={() => navigate("/register")}
               >
-                rejestruj sie 
+                Zarejestruj się
               </span>
             </p>
+
           </div>
         </div>
       </div>
