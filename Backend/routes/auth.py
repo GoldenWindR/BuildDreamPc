@@ -15,28 +15,28 @@ def init_users_routes(database):
 @users_bp.route("/register", methods=["POST"])
 def register():
     data = request.json
-    print(data)
     error = validate_json(data, register_user_schema)
     if error:
         return jsonify({"error": f"Invalid data: {error}"}), 400
 
-    existing_email = users_collection.find_one({"email": data["email"]})
-    if existing_email:
-        return jsonify({"error": "Email exist in database"}), 400
-    
-    existing_login = users_collection.find_one({"login": data["login"]})
-    if existing_login:
-        return jsonify({"error": "Login exist in database"}), 400
-    
-    hashed_pw = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
+    login_normalized = data["login"].strip().lower()
+    email_normalized = data["email"].strip().lower()
+
+    if users_collection.find_one({"email": email_normalized}):
+        return jsonify({"error": "Email exists in database"}), 400
+
+    if users_collection.find_one({"login": login_normalized}):
+        return jsonify({"error": "Login exists in database"}), 400
+
+    hashed_pw = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt()).decode('utf-8')
 
     user = {
-        "login" : data["login"],
-        "first_name": data["first_name"],
-        "last_name": data["last_name"],
-        "email": data["email"],
+        "login": login_normalized,
+        "first_name": data["first_name"].strip(),
+        "last_name": data["last_name"].strip(),
+        "email": email_normalized,
         "password": hashed_pw,
-        "date_of_registration": str(datetime.utcnow().isoformat()),
+        "date_of_registration": datetime.utcnow().isoformat(),
         "role": data.get("role", "user")
     }
 
@@ -50,21 +50,22 @@ def login():
     if error:
         return jsonify({"error": f"Invalid data: {error}"}), 400
 
-    user = users_collection.find_one({"login": data["login"]})
+    login_normalized = data["login"].strip().lower()
+    user = users_collection.find_one({"login": login_normalized})
+
     if not user:
         return jsonify({"error": "Invalid credentials"}), 401
 
-    if not bcrypt.checkpw(data["password"].encode("utf-8"), user["password"]):
+    if not bcrypt.checkpw(data["password"].encode("utf-8"), user["password"].encode("utf-8")):
         return jsonify({"error": "Invalid credentials"}), 401
 
     access_token = create_access_token(
         identity=str(user["login"]),
+        additional_claims={"role": user["role"]},
         expires_delta=timedelta(hours=2)
     )
 
-    return jsonify({
-        "access_token": access_token
-    }), 200
+    return jsonify({"access_token": access_token}), 200
 
 @users_bp.route("/profile", methods=["GET"])
 @jwt_required()
