@@ -1,0 +1,489 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1760955730088
+  modified: 1760955730088
+  description: ""
+collection:
+  - name: http://127.0.0.1:5000/users
+    meta:
+      id: fld_d5e9c333ea75413db3df57cd5097456b
+      created: 1768753804729
+      modified: 1768950094030
+      sortKey: -1768753804729
+      description: ""
+    children:
+      - url: http://127.0.0.1:5000/users/register
+        name: Rejestracja
+        meta:
+          id: req_21bbf8f1f3a7484e8903cb255c10b796
+          created: 1768753808280
+          modified: 1768951135504
+          isPrivate: false
+          description: ""
+          sortKey: -1768753808280
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "login": "jdoe",
+              "first_name": "Jan",
+              "last_name": "Kowalski",
+              "email": "jan.kowalskki2@test.pl",
+              "password": "Password123!",
+              "role": "user"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:5000/users/login
+        name: Logowanie
+        meta:
+          id: req_6d79e87856dd4babb3ab61468ced36b2
+          created: 1768753831591
+          modified: 1768951144696
+          isPrivate: false
+          description: ""
+          sortKey: -1768753831591
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "login": "jdoe",
+              "password": "Password123!"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:5000/users/profile
+        name: Profil
+        meta:
+          id: req_f2acf1c0ab364657afbdfaad399a9864
+          created: 1768753849444
+          modified: 1768753995934
+          isPrivate: false
+          description: ""
+          sortKey: -1768753849444
+        method: GET
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "login": "jdoe",
+              "first_name": "Jan",
+              "last_name": "Kowalski",
+              "email": "jan.kowalski@test.pl",
+              "date_of_registration": "2026-01-18T12:30:00",
+              "role": "user"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:5000/users/password
+        name: reset hasłą
+        meta:
+          id: req_bca8eafeee27471aa0512c87bac900c2
+          created: 1768753874323
+          modified: 1768754002624
+          isPrivate: false
+          description: ""
+          sortKey: -1768753874323
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "old_password": "Password123!",
+              "new_password": "NewPassword456!"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: http://127.0.0.1:5000/product
+    meta:
+      id: fld_e9bbacfde8f8407fb81d91671d599a43
+      created: 1768950100708
+      modified: 1769345767125
+      sortKey: -1768950100708
+      description: ""
+    children:
+      - url: http://localhost:5000/products?min_price=500&max_price=2000
+        name: lista
+        meta:
+          id: req_1cc3235313ae460c88d84569a0b01565
+          created: 1768950104964
+          modified: 1768997948534
+          isPrivate: false
+          description: ""
+          sortKey: -1768950104964
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/products
+        name: dodaj
+        meta:
+          id: req_88f39b3c81804e83a31e5d8641d14d2f
+          created: 1768950668110
+          modified: 1768951257554
+          isPrivate: false
+          description: ""
+          sortKey: -1768950105064
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "type": "cpu",
+              "brand": "AMD",
+              "model": "Ryzen 7 7800X3D",
+              "price": 1799,
+              "power_draw": 120,
+              "details": {
+                "socket": "AM5",
+                "tdp": 120,
+                "cores": 8,
+                "threads": 16,
+                "boost_clock": 5.0
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2ODk1MTI0NSwianRpIjoiMTcxYzQ1MzMtNjlkYy00NGUxLWE2MTMtOWJjOTc5NDMyODFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3Njg5NTEyNDUsImNzcmYiOiI1MTljYjVkZi1kNzM5LTQ3NDQtOWI0Mi00NWEyYjljZDVkZWEiLCJleHAiOjE3Njg5NTg0NDUsInJvbGUiOiJlbXBsb3llZSJ9.JJ48hFrueriEs1bX5JPB0lqr2lpRNfLNT2QJsomw8lY
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/products/65c1b0fa12e91d1234567890
+        name: pojedyczy
+        meta:
+          id: req_1e74df6998074baf8bc80aba1f28dd08
+          created: 1768950799046
+          modified: 1768950826626
+          isPrivate: false
+          description: ""
+          sortKey: -1768950799046
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/products/65c1b0fa12e91d1234567890
+        name: update
+        meta:
+          id: req_dd54be5446a14938a07313000050acb8
+          created: 1768950831985
+          modified: 1768950913812
+          isPrivate: false
+          description: ""
+          sortKey: -1768950831985
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "details": {
+                "socket": "AM5",
+                "tdp": 105,
+                "cores": 8,
+                "threads": 16,
+                "boost_clock": 4.8
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/products/65c1b0fa12e91d1234567890
+        name: usun
+        meta:
+          id: req_dedd067da2ad4a8895829a118da346f1
+          created: 1768950876382
+          modified: 1769346007040
+          isPrivate: false
+          description: ""
+          sortKey: -1768950876382
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: http://127.0.0.1:5000/card
+    meta:
+      id: fld_3358d84086ea4379a0ba25f125cd109e
+      created: 1769345772252
+      modified: 1769345772252
+      sortKey: -1769345772252
+      description: ""
+    children:
+      - url: http://127.0.0.1:5000/cart/add
+        name: dodanie
+        meta:
+          id: req_93069de5fb0a4226b454eceda7b96702
+          created: 1769345818763
+          modified: 1769346323557
+          isPrivate: false
+          description: ""
+          sortKey: -1769345818763
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "product_id": "69700aa459ee430be1c9ae9d",
+              "quantity": 2
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/remove/69700aa459ee430be1c9ae9d
+        name: usun produkt
+        meta:
+          id: req_1efb0560ff6e42dab6ddc14e4f829fef
+          created: 1769345937337
+          modified: 1769346277018
+          isPrivate: false
+          description: ""
+          sortKey: -1769345937337
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/update
+        name: update
+        meta:
+          id: req_837e849fd4274ffaa0d9eafc3b7313d4
+          created: 1769345987408
+          modified: 1769346228884
+          isPrivate: false
+          description: ""
+          sortKey: -1769345987408
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "product_id": "69700aa459ee430be1c9ae9d",
+              "quantity": 5
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart
+        name: koszyk
+        meta:
+          id: req_db5c9dcd4ed64f42ac40b63bf0fa1afe
+          created: 1769346029358
+          modified: 1769346183414
+          isPrivate: false
+          description: ""
+          sortKey: -1769346029358
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/clear
+        name: wyczysc koszyk
+        meta:
+          id: req_4cbb35de3a21400c841286cd7c8fd86f
+          created: 1769346054918
+          modified: 1769346268849
+          isPrivate: false
+          description: ""
+          sortKey: -1769346054918
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1760955754992
+    modified: 1760955754992
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1760955754917
+    modified: 1760955754917
+    isPrivate: false
