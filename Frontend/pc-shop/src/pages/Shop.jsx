@@ -4,6 +4,7 @@ function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [adding, setAdding] = useState(""); // do śledzenia dodawania produktu
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,6 +27,45 @@ function Shop() {
     fetchProducts();
   }, []);
 
+  const addToCart = async (productId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Musisz być zalogowany, aby dodać produkt do koszyka");
+      return;
+    }
+
+    setAdding(productId);
+
+    try {
+      const res = await fetch("http://localhost:5000/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          product_id: productId,
+          quantity: 1,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Błąd dodawania produktu do koszyka");
+        return;
+      }
+
+      alert("Produkt dodany do koszyka ✅");
+    } catch (err) {
+      console.error(err);
+      alert("Błąd połączenia z serwerem");
+    } finally {
+      setAdding("");
+    }
+  };
+
   if (loading) {
     return <p className="text-center mt-5">Ładowanie produktów...</p>;
   }
@@ -47,17 +87,17 @@ function Shop() {
                   {product.brand} {product.model}
                 </h5>
 
-                <p className="card-text">
-                  Typ: {product.type}
-                </p>
+                <p className="card-text">Typ: {product.type}</p>
 
                 <div className="mt-auto">
-                  <p className="fw-bold">
-                    {product.price} zł
-                  </p>
+                  <p className="fw-bold">{product.price} zł</p>
 
-                  <button className="btn btn-primary w-100">
-                    Dodaj do koszyka
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={() => addToCart(product._id)}
+                    disabled={adding === product._id}
+                  >
+                    {adding === product._id ? "Dodawanie..." : "Dodaj do koszyka"}
                   </button>
                 </div>
               </div>
