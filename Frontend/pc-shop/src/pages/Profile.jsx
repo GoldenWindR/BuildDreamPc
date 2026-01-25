@@ -186,13 +186,29 @@ function Profile() {
         <div className="col-md-8">
 
           {/* HISTORIA */}
-          <div className="card p-4 shadow mb-4">
+          <div className="card p-4 shadow">
             <h4>Historia zamówień</h4>
-            {orders.map(o => (
-              <div key={o.id} className="border p-2 mb-2">
-                {o.product} – {o.price} ({o.status})
+
+            {orders.map(order => (
+              <div key={order.id} className="border rounded p-3 mb-3">
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                >
+                  <strong>{order.product}</strong><br />
+                  Cena: {order.price}<br />
+                  Status: <strong>{order.status}</strong>
+                </div>
+
+                {expandedOrder === order.id && (
+                  <div className="mt-3 bg-light p-3 rounded">
+                    <p><strong>Data:</strong> {order.date}</p>
+                    <p>ID zamówienia: {order.id}</p>
+                  </div>
+                )}
               </div>
             ))}
+
           </div>
 
           {/* 🛑 ADMIN PANEL */}
