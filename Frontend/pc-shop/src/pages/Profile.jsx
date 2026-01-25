@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 function Profile() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [expandedOrder, setExpandedOrder] = useState(null);
 
   const [editProfile, setEditProfile] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [expandedOrder, setExpandedOrder] = useState(null);
 
   const [user, setUser] = useState({
     login: "",
@@ -16,24 +16,6 @@ function Profile() {
     role: ""
   });
 
-  // 🔮 MOCK – później podmienisz na API
-  const [orders] = useState([
-    {
-      id: 1,
-      product: "Laptop Gamingowy X-Pro",
-      price: "4999 zł",
-      status: "Zrealizowane",
-      date: "2026-01-10"
-    },
-    {
-      id: 2,
-      product: "Monitor 27\" 144Hz",
-      price: "999 zł",
-      status: "W realizacji",
-      date: "2026-01-18"
-    }
-  ]);
-
   const [profileForm, setProfileForm] = useState({
     first_name: "",
     last_name: ""
@@ -42,6 +24,19 @@ function Profile() {
   const [passwordForm, setPasswordForm] = useState({
     old_password: "",
     new_password: ""
+  });
+
+  // 🔮 historia – placeholder
+  const [orders] = useState([
+    { id: 1, product: "Laptop X-Pro", price: "4999 zł", status: "Zrealizowane" },
+    { id: 2, product: "Monitor 27\"", price: "999 zł", status: "W realizacji" }
+  ]);
+
+  // 🆕 ADMIN – FORMULARZ PRODUKTU
+  const [productForm, setProductForm] = useState({
+    name: "",
+    price: "",
+    description: ""
   });
 
   // 🔐 POBIERANIE PROFILU
@@ -82,14 +77,10 @@ function Profile() {
       body: JSON.stringify(profileForm)
     });
 
-    const data = await res.json();
-
     if (res.ok) {
       setUser({ ...user, ...profileForm });
       setMessage("Profil zaktualizowany");
       setEditProfile(false);
-    } else {
-      setMessage(data.error || "Błąd zapisu");
     }
   };
 
@@ -107,20 +98,22 @@ function Profile() {
       body: JSON.stringify(passwordForm)
     });
 
-    const data = await res.json();
-
     if (res.ok) {
       setMessage("Hasło zmienione");
       setPasswordForm({ old_password: "", new_password: "" });
       setEditPassword(false);
-    } else {
-      setMessage(data.error || "Błąd zmiany hasła");
     }
   };
 
-  if (loading) {
-    return <div className="text-center mt-5">Ładowanie...</div>;
-  }
+  // 🛒 ADMIN – DODANIE PRODUKTU (na razie mock)
+  const addProduct = (e) => {
+    e.preventDefault();
+    console.log("Nowy produkt:", productForm);
+    setMessage("Produkt dodany (mock)");
+    setProductForm({ name: "", price: "", description: "" });
+  };
+
+  if (loading) return <div className="text-center mt-5">Ładowanie...</div>;
 
   return (
     <div className="container mt-5">
@@ -129,7 +122,7 @@ function Profile() {
 
       <div className="row">
 
-        {/* LEWA STRONA */}
+        {/* LEWA */}
         <div className="col-md-4">
 
           {/* PROFIL */}
@@ -137,21 +130,25 @@ function Profile() {
             <h4>Profil</h4>
             <p><strong>Login:</strong> {user.login}</p>
             <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Rola:</strong> {user.role}</p>
 
             {!editProfile ? (
               <>
-                <p><strong>Imię:</strong> {user.first_name}</p>
-                <p><strong>Nazwisko:</strong> {user.last_name}</p>
+                <p>{user.first_name} {user.last_name}</p>
                 <button className="btn btn-primary w-100" onClick={() => setEditProfile(true)}>
                   Edytuj profil
                 </button>
               </>
             ) : (
               <form onSubmit={saveProfile}>
-                <input className="form-control mb-2" value={profileForm.first_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, first_name: e.target.value })} />
-                <input className="form-control mb-2" value={profileForm.last_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, last_name: e.target.value })} />
+                <input className="form-control mb-2"
+                  value={profileForm.first_name}
+                  onChange={e => setProfileForm({ ...profileForm, first_name: e.target.value })}
+                />
+                <input className="form-control mb-2"
+                  value={profileForm.last_name}
+                  onChange={e => setProfileForm({ ...profileForm, last_name: e.target.value })}
+                />
                 <button className="btn btn-success w-100 mb-2">Zapisz</button>
                 <button type="button" className="btn btn-secondary w-100" onClick={() => setEditProfile(false)}>
                   Anuluj
@@ -162,7 +159,6 @@ function Profile() {
 
           {/* HASŁO */}
           <div className="card p-4 shadow">
-            <h4>Hasło</h4>
             {!editPassword ? (
               <button className="btn btn-warning w-100" onClick={() => setEditPassword(true)}>
                 Zmień hasło
@@ -172,47 +168,59 @@ function Profile() {
                 <input type="password" className="form-control mb-2"
                   placeholder="Stare hasło"
                   value={passwordForm.old_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, old_password: e.target.value })} />
+                  onChange={e => setPasswordForm({ ...passwordForm, old_password: e.target.value })}
+                />
                 <input type="password" className="form-control mb-2"
                   placeholder="Nowe hasło"
                   value={passwordForm.new_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })} />
-                <button className="btn btn-success w-100 mb-2">Zapisz</button>
-                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditPassword(false)}>
-                  Anuluj
-                </button>
+                  onChange={e => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
+                />
+                <button className="btn btn-success w-100">Zapisz</button>
               </form>
             )}
           </div>
 
         </div>
 
-        {/* PRAWA STRONA – HISTORIA */}
+        {/* PRAWA */}
         <div className="col-md-8">
-          <div className="card p-4 shadow">
-            <h4>Zaposane kofiguracje</h4>
 
-            {orders.map(order => (
-              <div key={order.id} className="border rounded p-3 mb-3">
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                >
-                  <strong>{order.product}</strong><br />
-                  Cena: {order.price}<br />
-                  Status: <strong>{order.status}</strong>
-                </div>
-
-                {expandedOrder === order.id && (
-                  <div className="mt-3 bg-light p-3 rounded">
-                    <p><strong>Data:</strong> {order.date}</p>
-                    <p>ID zamówienia: {order.id}</p>
-                  </div>
-                )}
+          {/* HISTORIA */}
+          <div className="card p-4 shadow mb-4">
+            <h4>Historia zamówień</h4>
+            {orders.map(o => (
+              <div key={o.id} className="border p-2 mb-2">
+                {o.product} – {o.price} ({o.status})
               </div>
             ))}
-
           </div>
+
+          {/* 🛑 ADMIN PANEL */}
+          {user.role === "admin" && (
+            <div className="card p-4 shadow border-danger">
+              <h4 className="text-danger">Panel administratora</h4>
+
+              <form onSubmit={addProduct}>
+                <input className="form-control mb-2"
+                  placeholder="Nazwa produktu"
+                  value={productForm.name}
+                  onChange={e => setProductForm({ ...productForm, name: e.target.value })}
+                />
+                <input className="form-control mb-2"
+                  placeholder="Cena"
+                  value={productForm.price}
+                  onChange={e => setProductForm({ ...productForm, price: e.target.value })}
+                />
+                <textarea className="form-control mb-2"
+                  placeholder="Opis"
+                  value={productForm.description}
+                  onChange={e => setProductForm({ ...productForm, description: e.target.value })}
+                />
+                <button className="btn btn-danger w-100">Dodaj produkt</button>
+              </form>
+            </div>
+          )}
+
         </div>
 
       </div>
