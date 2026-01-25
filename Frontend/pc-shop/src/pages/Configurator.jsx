@@ -122,10 +122,38 @@ function Configurator() {
   const isCompleteConfig = ["cpu", "motherboard", "ram", "gpu", "psu", "case"]
     .every(k => selected[k]);
 
-  const addToCart = () => {
-    console.log("Dodano do koszyka:", selected);
-    alert("Zestaw dodany do koszyka");
-  };
+  const addToCart = async () => {
+  const token = localStorage.getItem("token");
+
+  const items = Object.values(selected).map(id => ({
+    product_id: id,
+    quantity: 1
+  }));
+
+  try {
+    const res = await fetch("http://localhost:5000/cart/configurations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: "Moja konfiguracja PC",
+        items,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Błąd zapisu konfiguracji");
+      return;
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Błąd połączenia z serwerem");
+  }
+};
 
   return (
     <div className="container mt-5">
@@ -174,7 +202,7 @@ function Configurator() {
           disabled={!isCompleteConfig}
           onClick={addToCart}
         >
-          Dodaj do koszyka
+          Zapisz konfiguracje
         </button>
 
         {!isCompleteConfig && (
