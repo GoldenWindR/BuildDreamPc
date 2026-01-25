@@ -71,7 +71,7 @@ def login():
 @jwt_required()
 def profile():
     current_user = get_jwt_identity()
-    user = users_collection.find_one({"email": current_user}, {"_id": 0, "password": 0})
+    user = users_collection.find_one({"login": current_user}, {"_id": 0, "password": 0})
     return jsonify(user), 200
 
 @users_bp.route("/password", methods=["POST"])
