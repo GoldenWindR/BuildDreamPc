@@ -19,16 +19,17 @@ from routes.auth import users_bp, init_users_routes
 from routes.products import products_bp, init_products_routes
 from routes.cart import cart_bp, init_cart_routes
 from routes.compatibility import compat_bp, init_compat_routes
+from Backend.routes.builder import builder_bp, init_builder_routes
 init_users_routes(db)
 init_products_routes(db)
 init_cart_routes(db)
 init_compat_routes(db)
-
+init_builder_routes(db)
 app.register_blueprint(users_bp, url_prefix="/users")
 app.register_blueprint(products_bp, url_prefix="/products")
 app.register_blueprint(cart_bp, url_prefix="/cart")
 app.register_blueprint(compat_bp, url_prefix="/compatibility")
-
+app.register_blueprint(builder_bp, url_prefix="/builder")
 
 if __name__ == "__main__":
     app.run(

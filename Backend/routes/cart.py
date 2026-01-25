@@ -205,7 +205,6 @@ def checkout():
         total_price += product["price"] * item["quantity"]
         total_power += product.get("power_draw", 0) * item["quantity"]
 
-        # 🔥 WARIANT A: zmniejsz stock
         products.update_one(
             {"_id": product["_id"]},
             {"$inc": {"stock": -item["quantity"]}}
@@ -240,81 +239,3 @@ def order_history():
             item["product_id"] = str(item["product_id"])
 
     return jsonify(orders_list)
-
-
-@cart_bp.route("/configurations", methods=["POST"])
-@jwt_required()
-def save_configuration():
-    login = get_jwt_identity()
-    data = request.json
-
-    configurations.insert_one({
-        "login": login,
-        "name": data.get("name", "My PC Build"),
-        "items": data["items"],
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
-    })
-
-    return jsonify({"message": "Configuration saved"})
-
-
-@cart_bp.route("/configurations", methods=["GET"])
-@jwt_required()
-def get_configurations():
-    login = get_jwt_identity()
-
-    configs = list(configurations.find({"login": login}))
-    for c in configs:
-        c["_id"] = str(c["_id"])
-        for i in c["items"]:
-            i["product_id"] = str(i["product_id"])
-
-    return jsonify(configs)
-
-
-@cart_bp.route("/configurations/<config_id>/restore", methods=["POST"])
-@jwt_required()
-def restore_configuration(config_id):
-    login = get_jwt_identity()
-
-    config = configurations.find_one({
-        "_id": ObjectId(config_id),
-        "login": login
-    })
-
-    if not config:
-        return jsonify({"error": "Configuration not found"}), 404
-
-    carts.update_one(
-        {"login": login},
-        {
-            "$set": {
-                "items": config["items"],
-                "updated_at": datetime.utcnow()
-            }
-        },
-        upsert=True
-    )
-
-    return jsonify({"message": "Configuration restored to cart"})
-
-
-@cart_bp.route("/configurations/<config_id>", methods=["PUT"])
-@jwt_required()
-def update_configuration(config_id):
-    login = get_jwt_identity()
-    data = request.json
-
-    configurations.update_one(
-        {"_id": ObjectId(config_id), "login": login},
-        {
-            "$set": {
-                "name": data.get("name"),
-                "items": data.get("items"),
-                "updated_at": datetime.utcnow()
-            }
-        }
-    )
-
-    return jsonify({"message": "Configuration updated"})

@@ -322,7 +322,7 @@ collection:
     meta:
       id: fld_3358d84086ea4379a0ba25f125cd109e
       created: 1769345772252
-      modified: 1769345772252
+      modified: 1769357371832
       sortKey: -1769345772252
       description: ""
     children:
@@ -523,168 +523,6 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:5000/cart/configurations
-        name: Zapisz konfigurację
-        meta:
-          id: req_360b5357da1c43d0a205ad5d3743d89e
-          created: 1769351694590
-          modified: 1769352638296
-          isPrivate: false
-          description: ""
-          sortKey: -1769351694590
-        method: POST
-        body:
-          mimeType: application/json
-          text: |
-            {
-              "name": "Gaming PC RTX",
-              "items": [
-                {
-                  "product_id": "65bfa2f0e1234567890abcd",
-                  "quantity": 1
-                },
-                {
-                  "product_id": "65bfa2f0e9876543210abcd",
-                  "quantity": 2
-                }
-              ]
-            }
-        headers:
-          - name: Content-Type
-            value: application/json
-          - name: User-Agent
-            value: insomnia/12.3.0
-            description: ""
-            disabled: false
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:5000/cart/configurations
-        name: zapisane konfiguracje
-        meta:
-          id: req_080672c24c5d44eea86bc562bd9bdb0a
-          created: 1769351750597
-          modified: 1769352647056
-          isPrivate: false
-          description: ""
-          sortKey: -1769351750597
-        method: GET
-        headers:
-          - name: User-Agent
-            value: insomnia/12.3.0
-            description: ""
-            disabled: false
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd/restore
-        name: Przywróć konfigurację
-        meta:
-          id: req_753836cc640d4e9db8a384bbb6c0fc80
-          created: 1769351773884
-          modified: 1769352652170
-          isPrivate: false
-          description: ""
-          sortKey: -1769351773884
-        method: GET
-        headers:
-          - name: User-Agent
-            value: insomnia/12.3.0
-            description: ""
-            disabled: false
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd
-        name: Edytuj konfigurację
-        meta:
-          id: req_36dcdd19f3674c6d8a8d77d4e3dc07d9
-          created: 1769351807886
-          modified: 1769352656948
-          isPrivate: false
-          description: ""
-          sortKey: -1769351807886
-        method: PUT
-        body:
-          mimeType: application/json
-          text: |
-            {
-              "name": "Gaming PC RTX v2",
-              "items": [
-                {
-                  "product_id": "65bfa2f0e1234567890abcd",
-                  "quantity": 1
-                }
-              ]
-            }
-        headers:
-          - name: Content-Type
-            value: application/json
-          - name: User-Agent
-            value: insomnia/12.3.0
-            description: ""
-            disabled: false
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd
-        name: Usuń konfigurację
-        meta:
-          id: req_2e587402d2334faf8bb77a3017f2611b
-          created: 1769351852130
-          modified: 1769352666628
-          isPrivate: false
-          description: ""
-          sortKey: -1769351852130
-        method: DELETE
-        headers:
-          - name: User-Agent
-            value: insomnia/12.3.0
-            description: ""
-            disabled: false
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
   - name: http://localhost:5000/recomedation
     meta:
       id: fld_d12d34bf2ff642de89a0dd1ef0e8a802
@@ -692,6 +530,261 @@ collection:
       modified: 1769346612844
       sortKey: -1769346603418
       description: ""
+    children:
+      - url: ""
+        name: New Request
+        meta:
+          id: req_788c900cbb074794a67a3a032e875185
+          created: 1769357621517
+          modified: 1769357621517
+          isPrivate: false
+          description: ""
+          sortKey: -1769357621517
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: ""
+        name: New Request
+        meta:
+          id: req_cefee16c2896497f9d09540e8f6cc3fa
+          created: 1769357632679
+          modified: 1769357632679
+          isPrivate: false
+          description: ""
+          sortKey: -1769354339901
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: ""
+        name: New Request
+        meta:
+          id: req_29e8ca98ad6345daba2ce778c6ddbe8f
+          created: 1769357635638
+          modified: 1769357635638
+          isPrivate: false
+          description: ""
+          sortKey: -1769355980709
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: http://127.0.0.1:5000/builder
+    meta:
+      id: fld_a7351f9d2ffb455dbe9e4dc7fc1e9ff4
+      created: 1769357399906
+      modified: 1769358688275
+      sortKey: -1769357399906
+      description: ""
+    children:
+      - url: http://localhost:5000/builder/
+        name: Pobranie aktywnego buildera
+        meta:
+          id: req_4ad9668a039540b496343a98c2b32e62
+          created: 1769358689077
+          modified: 1769358707556
+          isPrivate: false
+          description: ""
+          sortKey: -1769358689077
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/add
+        name: Dodanie komponentu
+        meta:
+          id: req_e91d2e9a325f48be89802ece73044498
+          created: 1769358708392
+          modified: 1769358741346
+          isPrivate: false
+          description: ""
+          sortKey: -1769358708392
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "product_id": "650f5a7d1a2b3c4d5e6f7a8b"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/remove/650f5a7d1a2b3c4d5e6f7a8b
+        name: Usunięcie komponentu
+        meta:
+          id: req_9bfcba8e20524c7bad26f5684bffa9dc
+          created: 1769358728731
+          modified: 1769358761877
+          isPrivate: false
+          description: ""
+          sortKey: -1769358728731
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/save
+        name: Zapisanie konfiguracji
+        meta:
+          id: req_659c55f99cf54b1b9c5caf3a0528fee5
+          created: 1769358765704
+          modified: 1769358803243
+          isPrivate: false
+          description: ""
+          sortKey: -1769358765704
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "name": "Moja pierwsza konfiguracja"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/configs
+        name: Lista zapisanych konfiguracji
+        meta:
+          id: req_1ac855908181427cb92caa20a379f68b
+          created: 1769358804920
+          modified: 1769358814915
+          isPrivate: false
+          description: ""
+          sortKey: -1769358804920
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/restore/650f5a7d1a2b3c4d5e6f7b9c
+        name: Przywrócenie zapisanej konfiguracji
+        meta:
+          id: req_f9d99028003d41df97244241540d541c
+          created: 1769358826298
+          modified: 1769358834498
+          isPrivate: false
+          description: ""
+          sortKey: -1769358826298
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/builder/checkout
+        name: Przeniesienie buildera do koszyka
+        meta:
+          id: req_b6b8f229f9b2438d8992b0bb4c3cfc3b
+          created: 1769358841598
+          modified: 1769358849332
+          isPrivate: false
+          description: ""
+          sortKey: -1769358841598
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
