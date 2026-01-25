@@ -7,18 +7,23 @@ cart_bp = Blueprint("cart", __name__)
 
 carts = None
 products = None
+orders = None
+configurations = None
 
 
 def init_cart_routes(db):
-    global carts, products
+    global carts, products, orders, configurations
     carts = db["carts"]
     products = db["products"]
+    orders = db["orders"]
+    configurations = db["configurations"]
+
 
 
 @cart_bp.route("/add", methods=["POST"])
 @jwt_required()
 def add_to_cart():
-    user_email = get_jwt_identity()
+    login = get_jwt_identity()
     data = request.json
 
     product_id = data.get("product_id")
@@ -31,11 +36,11 @@ def add_to_cart():
     if not product:
         return jsonify({"error": "Product not found"}), 404
 
-    cart = carts.find_one({"user_email": user_email})
+    cart = carts.find_one({"login": login})
 
     if not cart:
         carts.insert_one({
-            "user_email": user_email,
+            "login": login,
             "items": [{"product_id": ObjectId(product_id), "quantity": quantity}],
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
@@ -43,7 +48,7 @@ def add_to_cart():
     else:
         carts.update_one(
             {
-                "user_email": user_email,
+                "login": login,
                 "items.product_id": ObjectId(product_id)
             },
             {
@@ -54,7 +59,7 @@ def add_to_cart():
 
         carts.update_one(
             {
-                "user_email": user_email,
+                "login": login,
                 "items.product_id": {"$ne": ObjectId(product_id)}
             },
             {
@@ -68,10 +73,10 @@ def add_to_cart():
 @cart_bp.route("/remove/<product_id>", methods=["DELETE"])
 @jwt_required()
 def remove_from_cart(product_id):
-    user_email = get_jwt_identity()
+    login = get_jwt_identity()
 
     carts.update_one(
-        {"user_email": user_email},
+        {"login": login},
         {
             "$pull": {"items": {"product_id": ObjectId(product_id)}},
             "$set": {"updated_at": datetime.utcnow()}
@@ -84,12 +89,12 @@ def remove_from_cart(product_id):
 @cart_bp.route("/update", methods=["PUT"])
 @jwt_required()
 def update_quantity():
-    user_email = get_jwt_identity()
+    login = get_jwt_identity()
     data = request.json
 
     carts.update_one(
         {
-            "user_email": user_email,
+            "login": login,
             "items.product_id": ObjectId(data["product_id"])
         },
         {
@@ -106,10 +111,10 @@ def update_quantity():
 @cart_bp.route("", methods=["GET"])
 @jwt_required()
 def get_cart():
-    user_email = get_jwt_identity()
+    login = get_jwt_identity()
 
     pipeline = [
-        {"$match": {"user_email": user_email}},
+        {"$match": {"login": login}},
         {"$unwind": "$items"},
         {
             "$lookup": {
@@ -122,7 +127,7 @@ def get_cart():
         {"$unwind": "$product"},
         {
             "$group": {
-                "_id": "$user_email",
+                "_id": "$login",
                 "items": {
                     "$push": {
                         "product_id": "$product._id",
@@ -167,6 +172,149 @@ def get_cart():
 @cart_bp.route("/clear", methods=["DELETE"])
 @jwt_required()
 def clear_cart():
-    user_email = get_jwt_identity()
-    carts.delete_one({"user_email": user_email})
+    login = get_jwt_identity()
+    carts.delete_one({"login": login})
     return jsonify({"message": "Cart cleared"})
+
+@cart_bp.route("/checkout", methods=["POST"])
+@jwt_required()
+def checkout():
+    login = get_jwt_identity()
+
+    cart = carts.find_one({"login": login})
+    if not cart or not cart.get("items"):
+        return jsonify({"error": "Cart is empty"}), 400
+
+    order_items = []
+    total_price = 0
+    total_power = 0
+
+    for item in cart["items"]:
+        product = products.find_one({"_id": item["product_id"]})
+        if not product:
+            continue
+
+        order_items.append({
+            "product_id": product["_id"],
+            "brand": product["brand"],
+            "model": product["model"],
+            "price": product["price"],
+            "quantity": item["quantity"]
+        })
+
+        total_price += product["price"] * item["quantity"]
+        total_power += product.get("power_draw", 0) * item["quantity"]
+
+        # 🔥 WARIANT A: zmniejsz stock
+        products.update_one(
+            {"_id": product["_id"]},
+            {"$inc": {"stock": -item["quantity"]}}
+        )
+
+
+    orders.insert_one({
+        "login": login,
+        "items": order_items,
+        "total_price": total_price,
+        "total_power_draw": total_power,
+        "created_at": datetime.utcnow()
+    })
+
+    carts.delete_one({"login": login})
+
+    return jsonify({"message": "Order placed successfully"})
+
+
+@cart_bp.route("/orders", methods=["GET"])
+@jwt_required()
+def order_history():
+    login = get_jwt_identity()
+
+    orders_list = list(
+        orders.find({"login": login}).sort("created_at", -1)
+    )
+
+    for order in orders_list:
+        order["_id"] = str(order["_id"])
+        for item in order["items"]:
+            item["product_id"] = str(item["product_id"])
+
+    return jsonify(orders_list)
+
+
+@cart_bp.route("/configurations", methods=["POST"])
+@jwt_required()
+def save_configuration():
+    login = get_jwt_identity()
+    data = request.json
+
+    configurations.insert_one({
+        "login": login,
+        "name": data.get("name", "My PC Build"),
+        "items": data["items"],
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    })
+
+    return jsonify({"message": "Configuration saved"})
+
+
+@cart_bp.route("/configurations", methods=["GET"])
+@jwt_required()
+def get_configurations():
+    login = get_jwt_identity()
+
+    configs = list(configurations.find({"login": login}))
+    for c in configs:
+        c["_id"] = str(c["_id"])
+        for i in c["items"]:
+            i["product_id"] = str(i["product_id"])
+
+    return jsonify(configs)
+
+
+@cart_bp.route("/configurations/<config_id>/restore", methods=["POST"])
+@jwt_required()
+def restore_configuration(config_id):
+    login = get_jwt_identity()
+
+    config = configurations.find_one({
+        "_id": ObjectId(config_id),
+        "login": login
+    })
+
+    if not config:
+        return jsonify({"error": "Configuration not found"}), 404
+
+    carts.update_one(
+        {"login": login},
+        {
+            "$set": {
+                "items": config["items"],
+                "updated_at": datetime.utcnow()
+            }
+        },
+        upsert=True
+    )
+
+    return jsonify({"message": "Configuration restored to cart"})
+
+
+@cart_bp.route("/configurations/<config_id>", methods=["PUT"])
+@jwt_required()
+def update_configuration(config_id):
+    login = get_jwt_identity()
+    data = request.json
+
+    configurations.update_one(
+        {"_id": ObjectId(config_id), "login": login},
+        {
+            "$set": {
+                "name": data.get("name"),
+                "items": data.get("items"),
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+
+    return jsonify({"message": "Configuration updated"})

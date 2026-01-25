@@ -474,6 +474,224 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: http://localhost:5000/cart/checkout
+        name: kupowanie
+        meta:
+          id: req_6bbdf80fc2d24c70a7a8f811be3fb179
+          created: 1769351030069
+          modified: 1769351051159
+          isPrivate: false
+          description: ""
+          sortKey: -1769351030069
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/orders
+        name: Lista zamówień użytkownika
+        meta:
+          id: req_d4e3a32b5cb640999114fcbf097cc19e
+          created: 1769351058285
+          modified: 1769352642644
+          isPrivate: false
+          description: ""
+          sortKey: -1769351058285
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/configurations
+        name: Zapisz konfigurację
+        meta:
+          id: req_360b5357da1c43d0a205ad5d3743d89e
+          created: 1769351694590
+          modified: 1769352638296
+          isPrivate: false
+          description: ""
+          sortKey: -1769351694590
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "name": "Gaming PC RTX",
+              "items": [
+                {
+                  "product_id": "65bfa2f0e1234567890abcd",
+                  "quantity": 1
+                },
+                {
+                  "product_id": "65bfa2f0e9876543210abcd",
+                  "quantity": 2
+                }
+              ]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/configurations
+        name: zapisane konfiguracje
+        meta:
+          id: req_080672c24c5d44eea86bc562bd9bdb0a
+          created: 1769351750597
+          modified: 1769352647056
+          isPrivate: false
+          description: ""
+          sortKey: -1769351750597
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd/restore
+        name: Przywróć konfigurację
+        meta:
+          id: req_753836cc640d4e9db8a384bbb6c0fc80
+          created: 1769351773884
+          modified: 1769352652170
+          isPrivate: false
+          description: ""
+          sortKey: -1769351773884
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd
+        name: Edytuj konfigurację
+        meta:
+          id: req_36dcdd19f3674c6d8a8d77d4e3dc07d9
+          created: 1769351807886
+          modified: 1769352656948
+          isPrivate: false
+          description: ""
+          sortKey: -1769351807886
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "name": "Gaming PC RTX v2",
+              "items": [
+                {
+                  "product_id": "65bfa2f0e1234567890abcd",
+                  "quantity": 1
+                }
+              ]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:5000/cart/configurations/65caa12fe123456789abcd
+        name: Usuń konfigurację
+        meta:
+          id: req_2e587402d2334faf8bb77a3017f2611b
+          created: 1769351852130
+          modified: 1769352666628
+          isPrivate: false
+          description: ""
+          sortKey: -1769351852130
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTM0NjE1OCwianRpIjoiYjZhMzU4Y2UtNGM3OS00NjFjLTg1MWUtYzAwZTI1NDQ3MGVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Impkb2UiLCJuYmYiOjE3NjkzNDYxNTgsImNzcmYiOiI0NGFkZjZlOS1hNjM0LTQ4NzEtODc1MS0yZWZkZTM4Y2MwZGMiLCJleHAiOjE3NjkzNTMzNTgsInJvbGUiOiJlbXBsb3llZSJ9.P0-oyvSVuxo_jd-tryOUvp4jHrBwh40gItMeUn95884
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: http://localhost:5000/recomedation
+    meta:
+      id: fld_d12d34bf2ff642de89a0dd1ef0e8a802
+      created: 1769346603418
+      modified: 1769346612844
+      sortKey: -1769346603418
+      description: ""
 cookieJar:
   name: Default Jar
   meta:
