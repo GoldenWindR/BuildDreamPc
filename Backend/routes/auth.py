@@ -94,7 +94,7 @@ def password_reset():
     hashed_new_pw = bcrypt.hashpw(data["new_password"].encode("utf-8"), bcrypt.gensalt())
 
     users_collection.update_one(
-        {"email": current_user},
+        {"login": current_user},
         {"$set": {"password": hashed_new_pw}}
     )
 
@@ -116,7 +116,7 @@ def update_users():
     }
     print(current_user)
     result = users_collection.update_one(
-        {"email": current_user},
+        {"login": current_user},
         {"$set": user}
     )
 

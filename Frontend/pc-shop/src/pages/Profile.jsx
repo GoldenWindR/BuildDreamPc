@@ -1,213 +1,197 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Profile() {
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+
   const [editProfile, setEditProfile] = useState(false);
-  const [editAddress, setEditAddress] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [message, setMessage] = useState(""); // komunikat na górze
   const [expandedOrder, setExpandedOrder] = useState(null);
 
   const [user, setUser] = useState({
-    login: "admin",
-    email: "admin@example.com"
+    login: "",
+    email: "",
+    first_name: "",
+    last_name: "",
+    role: ""
   });
 
-  const [address, setAddress] = useState({
-    street: "Kwiatowa",
-    houseNumber: "12A",
-    city: "Warszawa",
-    postalCode: "00-001",
-    country: "Polska"
-  });
-
+  // 🔮 MOCK – później podmienisz na API
   const [orders] = useState([
     {
       id: 1,
-      product: "Laptop Dell XPS",
-      price: "5999 zł",
+      product: "Laptop Gamingowy X-Pro",
+      price: "4999 zł",
       status: "Zrealizowane",
-      buyer: { name: "Jan Kowalski", email: "jan@example.com" },
-      deliveryAddress: address
+      date: "2026-01-10"
     },
     {
       id: 2,
-      product: "Mysz Logitech MX",
-      price: "399 zł",
+      product: "Monitor 27\" 144Hz",
+      price: "999 zł",
       status: "W realizacji",
-      buyer: { name: "Jan Kowalski", email: "jan@example.com" },
-      deliveryAddress: address
+      date: "2026-01-18"
     }
   ]);
 
   const [profileForm, setProfileForm] = useState({
-    login: user.login,
-    email: user.email
+    first_name: "",
+    last_name: ""
   });
-
-  const [addressForm, setAddressForm] = useState(address);
 
   const [passwordForm, setPasswordForm] = useState({
-    password: "",
-    passwordConfirm: ""
+    old_password: "",
+    new_password: ""
   });
 
-  const handleProfileChange = (e) => {
-    setProfileForm({ ...profileForm, [e.target.name]: e.target.value });
-  };
+  // 🔐 POBIERANIE PROFILU
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  const handleAddressChange = (e) => {
-    setAddressForm({ ...addressForm, [e.target.name]: e.target.value });
-  };
+    fetch("http://localhost:5000/users/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(data => {
+        setUser(data);
+        setProfileForm({
+          first_name: data.first_name,
+          last_name: data.last_name
+        });
+      })
+      .catch(() => setMessage("Błąd pobierania profilu"))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handlePasswordChange = (e) => {
-    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
-  };
-
-  const saveProfile = (e) => {
+  // ✏️ ZAPIS PROFILU
+  const saveProfile = async (e) => {
     e.preventDefault();
-    setUser({ ...user, ...profileForm });
-    setMessage("Dane profilu zapisane poprawnie!");
-    setEditProfile(false);
-  };
+    const token = localStorage.getItem("token");
 
-  const saveAddress = (e) => {
-    e.preventDefault();
-    setAddress(addressForm);
-    setMessage("Adres zapisany poprawnie!");
-    setEditAddress(false);
-  };
+    const res = await fetch("http://localhost:5000/users/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(profileForm)
+    });
 
-  const savePassword = (e) => {
-    e.preventDefault();
-    if (passwordForm.password !== passwordForm.passwordConfirm) {
-      setMessage("Hasła nie są takie same!");
-      return;
+    const data = await res.json();
+
+    if (res.ok) {
+      setUser({ ...user, ...profileForm });
+      setMessage("Profil zaktualizowany");
+      setEditProfile(false);
+    } else {
+      setMessage(data.error || "Błąd zapisu");
     }
-    setMessage("Hasło zmienione poprawnie!");
-    setPasswordForm({ password: "", passwordConfirm: "" });
-    setEditPassword(false);
   };
+
+  // 🔑 ZMIANA HASŁA
+  const changePassword = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:5000/users/password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(passwordForm)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setMessage("Hasło zmienione");
+      setPasswordForm({ old_password: "", new_password: "" });
+      setEditPassword(false);
+    } else {
+      setMessage(data.error || "Błąd zmiany hasła");
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center mt-5">Ładowanie...</div>;
+  }
 
   return (
     <div className="container mt-5">
-      {/* KOMUNIKAT NA GÓRZE */}
-      {message && (
-        <div className="alert alert-info text-center mb-4">{message}</div>
-      )}
+
+      {message && <div className="alert alert-info text-center">{message}</div>}
 
       <div className="row">
 
-        {/* LEWA KOLUMNA */}
+        {/* LEWA STRONA */}
         <div className="col-md-4">
 
           {/* PROFIL */}
           <div className="card p-4 shadow mb-4">
-            <h4 className="text-center mb-3">Profil użytkownika</h4>
+            <h4>Profil</h4>
+            <p><strong>Login:</strong> {user.login}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+
             {!editProfile ? (
               <>
-                <p><strong>Login:</strong> {user.login}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => setEditProfile(true)}
-                >
+                <p><strong>Imię:</strong> {user.first_name}</p>
+                <p><strong>Nazwisko:</strong> {user.last_name}</p>
+                <button className="btn btn-primary w-100" onClick={() => setEditProfile(true)}>
                   Edytuj profil
                 </button>
               </>
             ) : (
               <form onSubmit={saveProfile}>
-                <input
-                  className="form-control mb-2"
-                  name="login"
-                  value={profileForm.login}
-                  onChange={handleProfileChange}
-                />
-                <input
-                  className="form-control mb-2"
-                  name="email"
-                  value={profileForm.email}
-                  onChange={handleProfileChange}
-                />
+                <input className="form-control mb-2" value={profileForm.first_name}
+                  onChange={(e) => setProfileForm({ ...profileForm, first_name: e.target.value })} />
+                <input className="form-control mb-2" value={profileForm.last_name}
+                  onChange={(e) => setProfileForm({ ...profileForm, last_name: e.target.value })} />
                 <button className="btn btn-success w-100 mb-2">Zapisz</button>
-                <button
-                  type="button"
-                  className="btn btn-secondary w-100"
-                  onClick={() => setEditProfile(false)}
-                >
+                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditProfile(false)}>
                   Anuluj
                 </button>
               </form>
             )}
           </div>
 
-          {/* ADRES */}
-          <div className="card p-4 shadow mb-4">
-            <h4 className="text-center mb-3">Adres zamieszkania</h4>
-            {!editAddress ? (
-              <>
-                <p>{address.street} {address.houseNumber}</p>
-                <p>{address.postalCode} {address.city}</p>
-                <p>{address.country}</p>
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => setEditAddress(true)}
-                >
-                  Edytuj adres
-                </button>
-              </>
-            ) : (
-              <form onSubmit={saveAddress}>
-                <input className="form-control mb-2" name="street" value={addressForm.street} onChange={handleAddressChange} placeholder="Ulica" />
-                <input className="form-control mb-2" name="houseNumber" value={addressForm.houseNumber} onChange={handleAddressChange} placeholder="Numer domu" />
-                <input className="form-control mb-2" name="postalCode" value={addressForm.postalCode} onChange={handleAddressChange} placeholder="Kod pocztowy" />
-                <input className="form-control mb-2" name="city" value={addressForm.city} onChange={handleAddressChange} placeholder="Miasto" />
-                <input className="form-control mb-2" name="country" value={addressForm.country} onChange={handleAddressChange} placeholder="Kraj" />
-                <button className="btn btn-success w-100 mb-2">Zapisz</button>
-                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditAddress(false)}>Anuluj</button>
-              </form>
-            )}
-          </div>
-
           {/* HASŁO */}
           <div className="card p-4 shadow">
-            <h4 className="text-center mb-3">Zmiana hasła</h4>
+            <h4>Hasło</h4>
             {!editPassword ? (
-              <button
-                className="btn btn-warning w-100"
-                onClick={() => setEditPassword(true)}
-              >
+              <button className="btn btn-warning w-100" onClick={() => setEditPassword(true)}>
                 Zmień hasło
               </button>
             ) : (
-              <form onSubmit={savePassword}>
-                <input
-                  type="password"
-                  className="form-control mb-2"
-                  name="password"
-                  value={passwordForm.password}
+              <form onSubmit={changePassword}>
+                <input type="password" className="form-control mb-2"
+                  placeholder="Stare hasło"
+                  value={passwordForm.old_password}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, old_password: e.target.value })} />
+                <input type="password" className="form-control mb-2"
                   placeholder="Nowe hasło"
-                  onChange={handlePasswordChange}
-                />
-                <input
-                  type="password"
-                  className="form-control mb-2"
-                  name="passwordConfirm"
-                  value={passwordForm.passwordConfirm}
-                  placeholder="Powtórz hasło"
-                  onChange={handlePasswordChange}
-                />
-                <button className="btn btn-success w-100 mb-2">Zapisz hasło</button>
-                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditPassword(false)}>Anuluj</button>
+                  value={passwordForm.new_password}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })} />
+                <button className="btn btn-success w-100 mb-2">Zapisz</button>
+                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditPassword(false)}>
+                  Anuluj
+                </button>
               </form>
             )}
           </div>
 
         </div>
 
-        {/* PRAWA KOLUMNA – HISTORIA */}
+        {/* PRAWA STRONA – HISTORIA */}
         <div className="col-md-8">
           <div className="card p-4 shadow">
-            <h4 className="mb-3">Historia zamówień</h4>
+            <h4>Zaposane kofiguracje</h4>
+
             {orders.map(order => (
               <div key={order.id} className="border rounded p-3 mb-3">
                 <div
@@ -216,22 +200,18 @@ function Profile() {
                 >
                   <strong>{order.product}</strong><br />
                   Cena: {order.price}<br />
-                  Status: <span className="fw-bold">{order.status}</span>
+                  Status: <strong>{order.status}</strong>
                 </div>
+
                 {expandedOrder === order.id && (
                   <div className="mt-3 bg-light p-3 rounded">
-                    <p><strong>Kupujący:</strong> {order.buyer.name}</p>
-                    <p><strong>Email:</strong> {order.buyer.email}</p>
-                    <p><strong>Adres dostawy:</strong></p>
-                    <p>
-                      {order.deliveryAddress.street} {order.deliveryAddress.houseNumber}<br />
-                      {order.deliveryAddress.postalCode} {order.deliveryAddress.city}<br />
-                      {order.deliveryAddress.country}
-                    </p>
+                    <p><strong>Data:</strong> {order.date}</p>
+                    <p>ID zamówienia: {order.id}</p>
                   </div>
                 )}
               </div>
             ))}
+
           </div>
         </div>
 
