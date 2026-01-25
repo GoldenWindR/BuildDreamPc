@@ -5,6 +5,12 @@ function Configurator() {
   const [selected, setSelected] = useState({});
   const [recommendations, setRecommendations] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 3000);
+  };
 
   // =========================
   // 🔹 POBRANIE PRODUKTÓW
@@ -44,6 +50,7 @@ function Configurator() {
         setRecommendations(data);
       } catch (err) {
         console.error(err);
+        showMessage("danger", "Błąd pobierania kompatybilności");
       } finally {
         setLoading(false);
       }
@@ -98,10 +105,10 @@ function Configurator() {
         throw new Error(data.error || "Błąd zapisu konfiguracji");
       }
 
-      alert("💾 Konfiguracja zapisana");
+      showMessage("success", "Konfiguracja zapisana");
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      showMessage("danger", err.message);
     }
   };
 
@@ -119,7 +126,7 @@ function Configurator() {
       }));
 
     if (items.length === 0) {
-      alert("Brak komponentów do dodania");
+      showMessage("danger", "Brak komponentów do dodania");
       return;
     }
 
@@ -140,10 +147,10 @@ function Configurator() {
         }
       }
 
-      alert("🛒 Konfiguracja dodana do koszyka");
+      showMessage("success", "Konfiguracja dodana do koszyka");
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      showMessage("danger", err.message);
     }
   };
 
@@ -222,6 +229,12 @@ function Configurator() {
     <div className="container mt-5">
       <h1 className="text-center mb-4">Konfigurator PC</h1>
 
+      {message && (
+        <div className={`alert alert-${message.type} text-center`}>
+          {message.text}
+        </div>
+      )}
+
       <div className="row">
         <div className="col-md-7">
           {renderSelect("Procesor", "cpu")}
@@ -265,10 +278,6 @@ function Configurator() {
         >
           Zapisz konfigurację
         </button>
-
-        {!isCompleteConfig && (
-          <div className="text-muted mt-2">Wybierz wszystkie komponenty</div>
-        )}
       </div>
 
       <div className="text-center mt-3">
