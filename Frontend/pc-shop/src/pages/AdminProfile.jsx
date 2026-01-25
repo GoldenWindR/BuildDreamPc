@@ -176,7 +176,7 @@ function AdminProfile() {
 
         {/* PRAWA KOLUMNA */}
         <div className="col-md-8">
-          {/* PANEL ADMINA */}
+          {/* PANEL ADMINA   aktualizacja  */}
           <div className="card p-4 shadow border-danger">
             <h4 className="text-danger">Panel administratora</h4>
             <form onSubmit={addProduct}>
