@@ -6,6 +6,7 @@ import Configurator from "./pages/Configurator";
 import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import AdminProfile from "./pages/AdminProfile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/configurator" element={<Configurator />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="/AdminProfile" element={<AdminProfile />} />
       </Routes>
     </BrowserRouter>
   );
