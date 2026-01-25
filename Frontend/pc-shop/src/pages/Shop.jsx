@@ -1,42 +1,38 @@
+import { useEffect, useState } from "react";
+
 function Shop() {
-  const products = [
-    {
-      id: 1,
-      name: "Laptop Gamingowy X-Pro",
-      price: "4999 zł",
-      description: "Intel i7, 16GB RAM, RTX 4060",
-    },
-    {
-      id: 2,
-      name: "Komputer PC Ryzen",
-      price: "3799 zł",
-      description: "Ryzen 5, 16GB RAM, RTX 3060",
-    },
-    {
-      id: 3,
-      name: "Monitor 27\" 144Hz",
-      price: "999 zł",
-      description: "Full HD, IPS, 1ms",
-    },
-    {
-      id: 4,
-      name: "Klawiatura Mechaniczna",
-      price: "349 zł",
-      description: "RGB, przełączniki Red",
-    },
-    {
-      id: 5,
-      name: "Mysz Gamingowa",
-      price: "199 zł",
-      description: "16000 DPI, RGB",
-    },
-    {
-      id: 6,
-      name: "Słuchawki Gamingowe",
-      price: "299 zł",
-      description: "7.1 Surround, Mikrofon",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/products/");
+
+        if (!response.ok) {
+          throw new Error("Błąd pobierania produktów");
+        }
+
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError("Nie udało się pobrać produktów");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center mt-5">Ładowanie produktów...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-danger mt-5">{error}</p>;
+  }
 
   return (
     <div className="container mt-5">
@@ -44,14 +40,22 @@ function Shop() {
 
       <div className="row">
         {products.map((product) => (
-          <div className="col-md-4 mb-4" key={product.id}>
+          <div className="col-md-4 mb-4" key={product._id}>
             <div className="card h-100 shadow">
               <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">{product.description}</p>
+                <h5 className="card-title">
+                  {product.brand} {product.model}
+                </h5>
+
+                <p className="card-text">
+                  Typ: {product.type}
+                </p>
 
                 <div className="mt-auto">
-                  <p className="fw-bold">{product.price}</p>
+                  <p className="fw-bold">
+                    {product.price} zł
+                  </p>
+
                   <button className="btn btn-primary w-100">
                     Dodaj do koszyka
                   </button>
@@ -60,6 +64,10 @@ function Shop() {
             </div>
           </div>
         ))}
+
+        {products.length === 0 && (
+          <p className="text-center">Brak produktów</p>
+        )}
       </div>
     </div>
   );

@@ -38,9 +38,9 @@ function Login() {
 
       //  zapis JWT
       localStorage.setItem("token", data.access_token);
-
       //  przekierowanie
       navigate("/");
+       window.location.reload();
     } catch (err) {
       setError("Brak połączenia z serwerem");
     }
@@ -76,9 +76,6 @@ function Login() {
             </form>
 
             <p className="text-center mt-3 mb-0">
-              Login testowy:
-              <br />
-              <strong>admin / admin</strong>
             </p>
 
             <p className="text-center mt-3 mb-0">
