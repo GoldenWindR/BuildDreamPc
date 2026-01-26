@@ -6,33 +6,14 @@ function Profile() {
 
   const [editProfile, setEditProfile] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [expandedOrder, setExpandedOrder] = useState(null);
 
-  const [user, setUser] = useState({
-    login: "",
-    email: "",
-    first_name: "",
-    last_name: "",
-    role: ""
-  });
+  const [hoveredOrder, setHoveredOrder] = useState(null);
+  const [hoveredConfig, setHoveredConfig] = useState(null);
 
-  // 🔮 MOCK – później podmienisz na API
-  const [orders] = useState([
-    {
-      id: 1,
-      product: "Laptop Gamingowy X-Pro",
-      price: "4999 zł",
-      status: "Zrealizowane",
-      date: "2026-01-10"
-    },
-    {
-      id: 2,
-      product: "Monitor 27\" 144Hz",
-      price: "999 zł",
-      status: "W realizacji",
-      date: "2026-01-18"
-    }
-  ]);
+  const [user, setUser] = useState({});
+  const [orders, setOrders] = useState([]);
+  const [configs, setConfigs] = useState([]);
+  const [productsMap, setProductsMap] = useState({});
 
   const [profileForm, setProfileForm] = useState({
     first_name: "",
@@ -44,31 +25,47 @@ function Profile() {
     new_password: ""
   });
 
-  // 🔐 POBIERANIE PROFILU
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/users/profile", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(data => {
-        setUser(data);
-        setProfileForm({
-          first_name: data.first_name,
-          last_name: data.last_name
+    Promise.all([
+      fetch("http://localhost:5000/users/profile", {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      fetch("http://localhost:5000/cart/orders", {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      fetch("http://localhost:5000/cart/configurations", {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      fetch("http://localhost:5000/products")
+    ])
+      .then(async ([p, o, c, pr]) => {
+        const profile = await p.json();
+        const orders = await o.json();
+        const configs = await c.json();
+        const products = await pr.json();
+
+        const map = {};
+        products.forEach(p => {
+          map[p._id] = `${p.brand} ${p.model}`;
         });
+
+        setUser(profile);
+        setProfileForm({
+          first_name: profile.first_name,
+          last_name: profile.last_name
+        });
+        setOrders(orders);
+        setConfigs(configs);
+        setProductsMap(map);
       })
-      .catch(() => setMessage("Błąd pobierania profilu"))
+      .catch(() => setMessage("Błąd ładowania danych"))
       .finally(() => setLoading(false));
   }, []);
 
-  // ✏️ ZAPIS PROFILU
+  /* ================= PROFIL ================= */
+
   const saveProfile = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -93,7 +90,8 @@ function Profile() {
     }
   };
 
-  // 🔑 ZMIANA HASŁA
+  /* ================= HASŁO ================= */
+
   const changePassword = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -118,18 +116,16 @@ function Profile() {
     }
   };
 
-  if (loading) {
-    return <div className="text-center mt-5">Ładowanie...</div>;
-  }
+  if (loading) return <div className="text-center mt-5">Ładowanie...</div>;
 
   return (
     <div className="container mt-5">
 
-      {message && <div className="alert alert-info text-center">{message}</div>}
+      {message && <div className="alert alert-info">{message}</div>}
 
       <div className="row">
 
-        {/* LEWA STRONA */}
+        {/* LEWA KOLUMNA */}
         <div className="col-md-4">
 
           {/* PROFIL */}
@@ -148,12 +144,19 @@ function Profile() {
               </>
             ) : (
               <form onSubmit={saveProfile}>
-                <input className="form-control mb-2" value={profileForm.first_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, first_name: e.target.value })} />
-                <input className="form-control mb-2" value={profileForm.last_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, last_name: e.target.value })} />
+                <input
+                  className="form-control mb-2"
+                  value={profileForm.first_name}
+                  onChange={e => setProfileForm({ ...profileForm, first_name: e.target.value })}
+                />
+                <input
+                  className="form-control mb-2"
+                  value={profileForm.last_name}
+                  onChange={e => setProfileForm({ ...profileForm, last_name: e.target.value })}
+                />
                 <button className="btn btn-success w-100 mb-2">Zapisz</button>
-                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditProfile(false)}>
+                <button type="button" className="btn btn-secondary w-100"
+                  onClick={() => setEditProfile(false)}>
                   Anuluj
                 </button>
               </form>
@@ -163,58 +166,93 @@ function Profile() {
           {/* HASŁO */}
           <div className="card p-4 shadow">
             <h4>Hasło</h4>
+
             {!editPassword ? (
-              <button className="btn btn-warning w-100" onClick={() => setEditPassword(true)}>
+              <button className="btn btn-warning w-100"
+                onClick={() => setEditPassword(true)}>
                 Zmień hasło
               </button>
             ) : (
               <form onSubmit={changePassword}>
-                <input type="password" className="form-control mb-2"
+                <input
+                  type="password"
+                  className="form-control mb-2"
                   placeholder="Stare hasło"
                   value={passwordForm.old_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, old_password: e.target.value })} />
-                <input type="password" className="form-control mb-2"
+                  onChange={e => setPasswordForm({ ...passwordForm, old_password: e.target.value })}
+                />
+                <input
+                  type="password"
+                  className="form-control mb-2"
                   placeholder="Nowe hasło"
                   value={passwordForm.new_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })} />
+                  onChange={e => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
+                />
                 <button className="btn btn-success w-100 mb-2">Zapisz</button>
-                <button type="button" className="btn btn-secondary w-100" onClick={() => setEditPassword(false)}>
+                <button type="button" className="btn btn-secondary w-100"
+                  onClick={() => setEditPassword(false)}>
                   Anuluj
                 </button>
               </form>
             )}
           </div>
-
         </div>
 
-        {/* PRAWA STRONA – HISTORIA */}
+        {/* PRAWA KOLUMNA */}
         <div className="col-md-8">
-          <div className="card p-4 shadow">
+
+          {/* ZAMÓWIENIA */}
+          <div className="card p-4 shadow mb-4">
             <h4>Historia zamówień</h4>
 
             {orders.map(order => (
-              <div key={order.id} className="border rounded p-3 mb-3">
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                >
-                  <strong>{order.product}</strong><br />
-                  Cena: {order.price}<br />
-                  Status: <strong>{order.status}</strong>
-                </div>
+              <div key={order._id}
+                className="border rounded p-3 mb-3"
+                onMouseEnter={() => setHoveredOrder(order._id)}
+                onMouseLeave={() => setHoveredOrder(null)}
+              >
+                <strong>Zamówienie #{order._id.slice(-6)}</strong>
+                <br />Cena: {order.total_price} zł
 
-                {expandedOrder === order.id && (
-                  <div className="mt-3 bg-light p-3 rounded">
-                    <p><strong>Data:</strong> {order.date}</p>
-                    <p>ID zamówienia: {order.id}</p>
-                  </div>
+                {hoveredOrder === order._id && (
+                  <ul className="list-group mt-3">
+                    {order.items.map((i, idx) => (
+                      <li key={idx} className="list-group-item">
+                        {i.brand} {i.model} × {i.quantity}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             ))}
-
           </div>
-        </div>
 
+          {/* KONFIGURACJE */}
+          <div className="card p-4 shadow">
+            <h4>Historia konfiguracji</h4>
+
+            {configs.map(cfg => (
+              <div key={cfg._id}
+                className="border rounded p-3 mb-3"
+                onMouseEnter={() => setHoveredConfig(cfg._id)}
+                onMouseLeave={() => setHoveredConfig(null)}
+              >
+                <strong>{cfg.name}</strong>
+
+                {hoveredConfig === cfg._id && (
+                  <ul className="list-group mt-3">
+                    {cfg.items.map((i, idx) => (
+                      <li key={idx} className="list-group-item">
+                        {productsMap[i.product_id] || "Nieznany produkt"} × {i.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
     </div>
   );
