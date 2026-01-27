@@ -13,7 +13,7 @@ products_collection = None
 def init_products_routes(db):
     global products_collection
     products_collection = db["products"]
-
+@products_bp.route("", methods=["POST"])
 @products_bp.route("/", methods=["POST"])
 @jwt_required()
 @role_required("employee", "admin")
@@ -57,8 +57,8 @@ def get_product(product_id):
     product["_id"] = str(product["_id"])
     return jsonify(product)
 
-
 @products_bp.route("/<product_id>", methods=["PUT"])
+@products_bp.route("/<product_id>/", methods=["PUT"])
 @jwt_required()
 @role_required("employee", "admin")
 def update_product(product_id):
@@ -89,7 +89,7 @@ def update_product(product_id):
 #/products?search=ryzen
 #/products?min_price=500&max_price=2000
 #/products?sort=price_desc
-
+@products_bp.route("", methods=["GET"])
 @products_bp.route("/", methods=["GET"])
 def get_products():
     query = {}
@@ -147,8 +147,8 @@ def get_products():
     return jsonify(products)
 
 
-
 @products_bp.route("/<product_id>", methods=["DELETE"])
+@products_bp.route("/<product_id>/", methods=["DELETE"])
 @jwt_required()
 @role_required("employee", "admin")
 def delete_product(product_id):

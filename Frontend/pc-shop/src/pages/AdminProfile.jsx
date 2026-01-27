@@ -1,5 +1,42 @@
 import { useEffect, useState } from "react";
 
+/* 🔧 DEFINICJA PÓL DETAILS DLA TYPÓW PRODUKTÓW */
+const detailFields = {
+  cpu: [
+    { name: "socket", label: "Socket" },
+    { name: "tdp", label: "TDP", type: "number" },
+    { name: "cores", label: "Rdzenie", type: "number" },
+    { name: "threads", label: "Wątki", type: "number" },
+    { name: "boost_clock", label: "Boost clock (GHz)", type: "number" }
+  ],
+
+  ram: [
+    { name: "ram_type", label: "Typ RAM" },
+    { name: "speed", label: "Taktowanie (MHz)", type: "number" },
+    { name: "capacity", label: "Pojemność (GB)", type: "number" },
+    { name: "voltage", label: "Napięcie", type: "number" }
+  ],
+
+  gpu: [
+    { name: "length_mm", label: "Długość (mm)", type: "number" },
+    { name: "power_draw", label: "Pobór mocy (W)", type: "number" },
+    { name: "recommended_psu", label: "Zalecany PSU (W)", type: "number" }
+  ],
+
+  psu: [
+    { name: "wattage", label: "Moc (W)", type: "number" },
+    { name: "efficiency", label: "Sprawność (80+)" },
+    { name: "modular", label: "Modularny (true / false)" }
+  ],
+
+  storage: [
+    { name: "type", label: "Typ (SSD/HDD)" },
+    { name: "protocol", label: "Interfejs" },
+    { name: "capacity", label: "Pojemność (GB)", type: "number" },
+    { name: "speed_read", label: "Prędkość odczytu", type: "number" }
+  ]
+};
+
 function AdminPanel() {
   const token = localStorage.getItem("token");
 
@@ -19,7 +56,7 @@ function AdminPanel() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
 
-  // 🔄 POBIERANIE PRODUKTÓW
+  /* 🔄 POBIERANIE PRODUKTÓW */
   const fetchProducts = async () => {
     const res = await fetch(
       `http://localhost:5000/products?search=${search}`
@@ -32,7 +69,7 @@ function AdminPanel() {
     fetchProducts();
   }, [search]);
 
-  //  DODAJ /  EDYTUJ
+  /* 💾 DODAWANIE / EDYCJA */
   const saveProduct = async (e) => {
     e.preventDefault();
 
@@ -63,11 +100,11 @@ function AdminPanel() {
       setEditingId(null);
       fetchProducts();
     } else {
-      setMessage(data.error || "Błąd zapisu");
+      setMessage(data.error || "Błąd zapisu produktu");
     }
   };
 
-  //  USUWANIE
+  /* 🗑 USUWANIE */
   const deleteProduct = async (id) => {
     if (!window.confirm("Usunąć produkt?")) return;
 
@@ -81,7 +118,7 @@ function AdminPanel() {
     fetchProducts();
   };
 
-  //  TRYB EDYCJI
+  /* ✏️ TRYB EDYCJI */
   const editProduct = (p) => {
     setForm({
       type: p.type,
@@ -96,11 +133,11 @@ function AdminPanel() {
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4"> Panel admina – produkty</h2>
+      <h2 className="mb-4">Panel admina – produkty</h2>
 
       {message && <div className="alert alert-info">{message}</div>}
 
-      {/* FORMULARZ */}
+      {/* ➕ FORMULARZ */}
       <div className="card p-4 mb-4 shadow">
         <h4>{editingId ? "Edytuj produkt" : "Dodaj produkt"}</h4>
 
@@ -108,7 +145,13 @@ function AdminPanel() {
           <select
             className="form-control mb-2"
             value={form.type}
-            onChange={(e) => setForm({ ...form, type: e.target.value })}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                type: e.target.value,
+                details: {}
+              })
+            }
           >
             <option value="cpu">CPU</option>
             <option value="gpu">GPU</option>
@@ -123,6 +166,7 @@ function AdminPanel() {
             placeholder="Marka"
             value={form.brand}
             onChange={(e) => setForm({ ...form, brand: e.target.value })}
+            required
           />
 
           <input
@@ -130,6 +174,7 @@ function AdminPanel() {
             placeholder="Model"
             value={form.model}
             onChange={(e) => setForm({ ...form, model: e.target.value })}
+            required
           />
 
           <input
@@ -138,6 +183,7 @@ function AdminPanel() {
             type="number"
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
+            required
           />
 
           <input
@@ -149,6 +195,30 @@ function AdminPanel() {
               setForm({ ...form, power_draw: e.target.value })
             }
           />
+
+          {/* 🔧 DYNAMICZNE POLA DETAILS */}
+          {detailFields[form.type]?.map((field) => (
+            <input
+              key={field.name}
+              className="form-control mb-2"
+              placeholder={field.label}
+              type={field.type || "text"}
+              value={form.details[field.name] || ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  details: {
+                    ...form.details,
+                    [field.name]:
+                      field.type === "number"
+                        ? Number(e.target.value)
+                        : e.target.value
+                  }
+                })
+              }
+              required
+            />
+          ))}
 
           <button className="btn btn-success w-100">
             {editingId ? "Zapisz zmiany" : "Dodaj produkt"}
@@ -169,7 +239,7 @@ function AdminPanel() {
         </form>
       </div>
 
-      {/* WYSZUKIWARKA */}
+      {/* 🔍 WYSZUKIWARKA */}
       <input
         className="form-control mb-3"
         placeholder="Szukaj produktu..."
@@ -177,7 +247,7 @@ function AdminPanel() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* LISTA */}
+      {/* 📦 LISTA PRODUKTÓW */}
       <div className="card p-4 shadow">
         <h4>Lista produktów</h4>
 
