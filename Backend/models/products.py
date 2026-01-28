@@ -1,3 +1,6 @@
+
+#tu możesz wsponieć o walidacji produktów
+
 from marshmallow import Schema, fields, ValidationError
 
 
