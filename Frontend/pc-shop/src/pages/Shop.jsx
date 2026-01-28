@@ -5,6 +5,8 @@ function Shop() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [adding, setAdding] = useState(""); // do śledzenia dodawania produktu
+  const [alertMessage, setAlertMessage] = useState(""); // wiadomość alertu
+  const [alertType, setAlertType] = useState(""); // 'success' lub 'danger'
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +33,8 @@ function Shop() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("Musisz być zalogowany, aby dodać produkt do koszyka");
+      setAlertMessage("Musisz być zalogowany, aby dodać produkt do koszyka");
+      setAlertType("danger");
       return;
     }
 
@@ -53,14 +56,17 @@ function Shop() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Błąd dodawania produktu do koszyka");
+        setAlertMessage(data.error || "Błąd dodawania produktu do koszyka");
+        setAlertType("danger");
         return;
       }
 
-      alert("Produkt dodany do koszyka ✅");
+      setAlertMessage("Produkt dodany do koszyka");
+      setAlertType("success");
     } catch (err) {
       console.error(err);
-      alert("Błąd połączenia z serwerem");
+      setAlertMessage("Błąd połączenia z serwerem");
+      setAlertType("danger");
     } finally {
       setAdding("");
     }
@@ -77,6 +83,20 @@ function Shop() {
   return (
     <div className="container mt-5">
       <h1 className="mb-4 text-center">Sklep</h1>
+
+      {alertMessage && (
+        <div
+          className={`alert alert-${alertType} alert-dismissible fade show`}
+          role="alert"
+        >
+          {alertMessage}
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setAlertMessage("")}
+          ></button>
+        </div>
+      )}
 
       <div className="row">
         {products.map((product) => (
@@ -97,7 +117,9 @@ function Shop() {
                     onClick={() => addToCart(product._id)}
                     disabled={adding === product._id}
                   >
-                    {adding === product._id ? "Dodawanie..." : "Dodaj do koszyka"}
+                    {adding === product._id
+                      ? "Dodawanie..."
+                      : "Dodaj do koszyka"}
                   </button>
                 </div>
               </div>
@@ -105,9 +127,7 @@ function Shop() {
           </div>
         ))}
 
-        {products.length === 0 && (
-          <p className="text-center">Brak produktów</p>
-        )}
+        {products.length === 0 && <p className="text-center">Brak produktów</p>}
       </div>
     </div>
   );
